@@ -11,31 +11,20 @@ const SUPABASE_FUNCTION_URL =
 // ==========================================
 
 const buscarDV =
-    document.getElementById(
-        "buscarDV"
-    );
+    document.getElementById("buscarDV");
 
 const resultados =
-    document.getElementById(
-        "resultados"
-    );
+    document.getElementById("resultados");
 
 const clienteHTML =
-    document.getElementById(
-        "cliente"
-    );
-
-const estado =
-    document.getElementById(
-        "estado"
-    );
+    document.getElementById("cliente");
 
 
 // ==========================================
-// TEMPORIZADOR DE BÚSQUEDA
+// TEMPORIZADOR
 // ==========================================
 
-let temporizador;
+let temporizador = null;
 
 
 // ==========================================
@@ -46,38 +35,33 @@ buscarDV.addEventListener(
     "input",
     function () {
 
-        clearTimeout(
-            temporizador
-        );
+        clearTimeout(temporizador);
 
         const texto =
-            buscarDV.value
-                .trim();
+            buscarDV.value.trim();
 
 
-        resultados.innerHTML =
-            "";
+        // Limpiar resultados anteriores
 
-        clienteHTML.innerHTML =
-            "";
+        resultados.innerHTML = "";
+
+        clienteHTML.innerHTML = "";
 
         clienteHTML.classList.add(
             "oculto"
         );
 
 
+        // Si no hay texto,
+        // no hacemos ninguna búsqueda
+
         if (!texto) {
-
-            estado.textContent =
-                "";
-
             return;
-
         }
 
 
-        // Esperar un poquito
-        // antes de consultar
+        // Esperar 250 ms antes
+        // de consultar Supabase
 
         temporizador =
             setTimeout(
@@ -105,11 +89,15 @@ async function buscarClientes(
 
     try {
 
-        estado.textContent =
-            "Buscando...";
+        resultados.innerHTML = `
 
-        estado.className =
-            "estado";
+            <div class="cargando-cliente">
+
+                Buscando...
+
+            </div>
+
+        `;
 
 
         const respuesta =
@@ -117,14 +105,11 @@ async function buscarClientes(
                 SUPABASE_FUNCTION_URL,
                 {
 
-                    method:
-                        "POST",
+                    method: "POST",
 
                     headers: {
-
                         "Content-Type":
                             "application/json"
-
                     },
 
                     body:
@@ -146,29 +131,35 @@ async function buscarClientes(
             await respuesta.json();
 
 
-        if (
-            !datos.ok
-        ) {
+        // ======================================
+        // ERROR DEL SERVIDOR
+        // ======================================
 
-            estado.textContent =
-                datos.mensaje ||
-                "Error en la búsqueda.";
+        if (!datos.ok) {
 
-            estado.classList.add(
-                "error"
-            );
+            resultados.innerHTML = `
+
+                <div class="sin-resultados">
+
+                    ${escapeHTML(
+                        datos.mensaje ||
+                        "Ocurrió un error."
+                    )}
+
+                </div>
+
+            `;
 
             return;
-
         }
 
 
-        estado.textContent =
-            datos.encontrados +
-            " coincidencia(s)";
-
+        // ======================================
+        // SIN RESULTADOS
+        // ======================================
 
         if (
+            !datos.resultados ||
             datos.resultados.length === 0
         ) {
 
@@ -184,9 +175,41 @@ async function buscarClientes(
             `;
 
             return;
-
         }
 
+
+        // ======================================
+        // MOSTRAR RESULTADOS
+        // ======================================
+
+        resultados.innerHTML = "";
+
+
+        // Número de coincidencias
+
+        const contador =
+            document.createElement(
+                "div"
+            );
+
+        contador.className =
+            "contador-resultados";
+
+        contador.textContent =
+            datos.resultados.length +
+            (
+                datos.resultados.length === 1
+                    ? " coincidencia"
+                    : " coincidencias"
+            );
+
+
+        resultados.appendChild(
+            contador
+        );
+
+
+        // Crear cada resultado
 
         datos.resultados.forEach(
             cliente => {
@@ -203,15 +226,21 @@ async function buscarClientes(
     catch (error) {
 
         console.error(
+            "Error buscando cliente:",
             error
         );
 
 
-        estado.textContent =
-            "❌ No se pudo conectar con el servidor.";
+        resultados.innerHTML = `
 
-        estado.className =
-            "estado error";
+            <div class="sin-resultados">
+
+                ❌ No se pudo conectar
+                con el servidor.
+
+            </div>
+
+        `;
 
     }
 
@@ -222,13 +251,13 @@ async function buscarClientes(
 // CREAR RESULTADO
 // ==========================================
 
-async function crearResultado(
+function crearResultado(
     cliente
 ) {
 
-    // ==========================================
-    // CONTENEDOR DEL RESULTADO
-    // ==========================================
+    // ======================================
+    // CONTENEDOR
+    // ======================================
 
     const contenedor =
         document.createElement(
@@ -239,9 +268,9 @@ async function crearResultado(
         "resultado-contenedor";
 
 
-    // ==========================================
+    // ======================================
     // BOTÓN
-    // ==========================================
+    // ======================================
 
     const boton =
         document.createElement(
@@ -254,6 +283,7 @@ async function crearResultado(
 
     const dv =
         cliente.noDV ?? "";
+
 
     const nombre =
         cliente.nombre ?? "";
@@ -269,6 +299,7 @@ async function crearResultado(
 
         </span>
 
+
         <span class="resultado-nombre">
 
             ${escapeHTML(
@@ -277,16 +308,19 @@ async function crearResultado(
 
         </span>
 
+
         <span class="resultado-flecha">
+
             ▶
+
         </span>
 
     `;
 
 
-    // ==========================================
-    // CONTENIDO OCULTO
-    // ==========================================
+    // ======================================
+    // DETALLE OCULTO
+    // ======================================
 
     const detalle =
         document.createElement(
@@ -297,16 +331,18 @@ async function crearResultado(
         "resultado-detalle oculto";
 
 
-    // ==========================================
-    // CLICK
-    // ==========================================
+    // ======================================
+    // CLICK EN CLIENTE
+    // ======================================
 
     boton.addEventListener(
         "click",
         async function () {
 
-            // Si ya está abierto,
-            // simplemente cerrarlo
+
+            // ==================================
+            // SI YA ESTÁ ABIERTO → CERRAR
+            // ==================================
 
             if (
                 !detalle.classList.contains(
@@ -322,10 +358,20 @@ async function crearResultado(
                     "seleccionado"
                 );
 
-                boton.querySelector(
-                    ".resultado-flecha"
-                ).textContent =
-                    "▶";
+
+                const flecha =
+                    boton.querySelector(
+                        ".resultado-flecha"
+                    );
+
+
+                if (flecha) {
+
+                    flecha.textContent =
+                        "▶";
+
+                }
+
 
                 return;
 
@@ -333,7 +379,7 @@ async function crearResultado(
 
 
             // ==================================
-            // CERRAR LOS DEMÁS
+            // CERRAR TODOS LOS DEMÁS
             // ==================================
 
             document
@@ -362,10 +408,12 @@ async function crearResultado(
                             "seleccionado"
                         );
 
+
                         const flecha =
                             elemento.querySelector(
                                 ".resultado-flecha"
                             );
+
 
                         if (flecha) {
 
@@ -379,7 +427,7 @@ async function crearResultado(
 
 
             // ==================================
-            // CARGAR INFORMACIÓN
+            // MOSTRAR CARGANDO
             // ==================================
 
             detalle.innerHTML = `
@@ -392,19 +440,34 @@ async function crearResultado(
 
             `;
 
+
             detalle.classList.remove(
                 "oculto"
             );
+
 
             boton.classList.add(
                 "seleccionado"
             );
 
-            boton.querySelector(
-                ".resultado-flecha"
-            ).textContent =
-                "▼";
 
+            const flecha =
+                boton.querySelector(
+                    ".resultado-flecha"
+                );
+
+
+            if (flecha) {
+
+                flecha.textContent =
+                    "▼";
+
+            }
+
+
+            // ==================================
+            // CONSULTAR CLIENTE
+            // ==================================
 
             try {
 
@@ -430,7 +493,7 @@ async function crearResultado(
                                         "cliente",
 
                                     noDV:
-                                        dv
+                                        String(dv)
 
                                 })
 
@@ -442,16 +505,23 @@ async function crearResultado(
                     await respuesta.json();
 
 
+                // ==================================
+                // CLIENTE NO ENCONTRADO
+                // ==================================
+
                 if (
                     !datos.ok ||
-                    !datos.encontrado
+                    !datos.encontrado ||
+                    !datos.cliente
                 ) {
 
                     detalle.innerHTML = `
 
                         <div class="sin-resultados">
 
-                            No se encontró la información.
+                            No se encontró
+                            la información
+                            del cliente.
 
                         </div>
 
@@ -461,6 +531,10 @@ async function crearResultado(
 
                 }
 
+
+                // ==================================
+                // MOSTRAR CLIENTE
+                // ==================================
 
                 detalle.innerHTML =
                     crearDetalleCliente(
@@ -472,6 +546,7 @@ async function crearResultado(
             catch (error) {
 
                 console.error(
+                    "Error cargando cliente:",
                     error
                 );
 
@@ -480,7 +555,8 @@ async function crearResultado(
 
                     <div class="sin-resultados">
 
-                        ❌ No se pudo cargar la información.
+                        ❌ No se pudo cargar
+                        la información.
 
                     </div>
 
@@ -492,9 +568,9 @@ async function crearResultado(
     );
 
 
-    // ==========================================
-    // AGREGAR
-    // ==========================================
+    // ======================================
+    // AGREGAR AL DOM
+    // ======================================
 
     contenedor.appendChild(
         boton
@@ -504,12 +580,16 @@ async function crearResultado(
         detalle
     );
 
-
     resultados.appendChild(
         contenedor
     );
 
 }
+
+
+// ==========================================
+// CREAR DETALLE DEL CLIENTE
+// ==========================================
 
 function crearDetalleCliente(
     cliente
@@ -518,11 +598,14 @@ function crearDetalleCliente(
     const dv =
         cliente.noDV ?? "";
 
+
     const nombre =
         cliente.nombre ?? "";
 
+
     const plaza =
         cliente.plaza ?? "";
+
 
     const region =
         cliente.region ?? "";
@@ -532,505 +615,248 @@ function crearDetalleCliente(
         "";
 
 
-    cliente.pagos.forEach(
-        pago => {
+    // ======================================
+    // DÍAS DE PAGO
+    // ======================================
 
-            const valor =
-                pago.valor;
+    if (
+        cliente.pagos &&
+        cliente.pagos.length > 0
+    ) {
+
+        cliente.pagos.forEach(
+            pago => {
+
+                const valor =
+                    pago.valor;
 
 
-            let cantidad;
+                let cantidad;
 
 
-            if (
-                valor === "" ||
-                valor === null ||
-                valor === undefined
-            ) {
+                // ==============================
+                // SIN DATO
+                // ==============================
 
-                cantidad = `
+                if (
+                    valor === "" ||
+                    valor === null ||
+                    valor === undefined
+                ) {
 
-                    <span class="sin-dato">
-                        Sin dato
-                    </span>
+                    cantidad = `
+
+                        <span class="sin-dato">
+
+                            Sin dato
+
+                        </span>
+
+                    `;
+
+                }
+
+                // ==============================
+                // CON DATO
+                // ==============================
+
+                else {
+
+                    const numero =
+                        Number(
+                            valor
+                        );
+
+
+                    if (
+                        Number.isNaN(
+                            numero
+                        )
+                    ) {
+
+                        cantidad =
+                            escapeHTML(
+                                String(
+                                    valor
+                                )
+                            );
+
+                    }
+
+                    else {
+
+                        cantidad =
+                            "$" +
+                            numero.toLocaleString(
+                                "es-MX",
+                                {
+                                    maximumFractionDigits:
+                                        2
+                                }
+                            );
+
+                    }
+
+                }
+
+
+                pagosHTML += `
+
+                    <div class="pago">
+
+                        <span class="pago-fecha">
+
+                            ${escapeHTML(
+                                String(
+                                    pago.fecha
+                                )
+                            )}
+
+                        </span>
+
+
+                        <span class="pago-cantidad">
+
+                            ${cantidad}
+
+                        </span>
+
+                    </div>
 
                 `;
 
             }
-            else {
+        );
 
-                const numero =
-                    Number(valor);
+    }
 
+    else {
 
-                if (
-                    Number.isNaN(
-                        numero
-                    )
-                ) {
+        pagosHTML = `
 
-                    cantidad =
-                        escapeHTML(
-                            String(
-                                valor
-                            )
-                        );
+            <div class="sin-resultados">
 
-                }
-                else {
+                No hay días de pago registrados.
 
-                    cantidad =
-                        "$" +
-                        numero.toLocaleString(
-                            "es-MX",
-                            {
-                                maximumFractionDigits:
-                                    2
-                            }
-                        );
+            </div>
 
-                }
+        `;
 
-            }
+    }
 
 
-            pagosHTML += `
+    // ======================================
+    // HTML DEL CLIENTE
+    // ======================================
 
-                <div class="pago">
+    return `
 
-                    <span class="pago-fecha">
+        <div class="detalle-encabezado">
 
-                        ${escapeHTML(
-                            String(
-                                pago.fecha
-                            )
-                        )}
+            <h3>
 
-                    </span>
-
-                    <span class="pago-cantidad">
-
-                        ${cantidad}
-
-                    </span>
-
-                </div>
-
-            `;
-
-        }
-    );
-
-return `
-
-    <div class="detalle-encabezado">
-
-        <h3>
-            ${escapeHTML(
-                String(nombre)
-            )}
-        </h3>
-
-        <div class="detalle-dv">
-
-            No. DV:
-            <strong>
-                ${escapeHTML(
-                    String(dv)
-                )}
-            </strong>
-
-        </div>
-
-    </div>
-
-
-    <div class="datos">
-
-        <div class="dato">
-
-            <span class="dato-titulo">
-                Nombre
-            </span>
-
-            <span class="dato-valor">
                 ${escapeHTML(
                     String(nombre)
                 )}
-            </span>
+
+            </h3>
+
+
+            <div class="detalle-dv">
+
+                No. DV:
+
+                <strong>
+
+                    ${escapeHTML(
+                        String(dv)
+                    )}
+
+                </strong>
+
+            </div>
 
         </div>
 
 
-        <div class="dato">
+        <div class="datos">
 
-            <span class="dato-titulo">
-                Plaza
-            </span>
+            <div class="dato">
 
-            <span class="dato-valor">
-                ${escapeHTML(
-                    String(plaza)
-                )}
-            </span>
+                <span class="dato-titulo">
 
-        </div>
+                    Nombre
 
+                </span>
 
-        <div class="dato">
 
-            <span class="dato-titulo">
-                Región
-            </span>
+                <span class="dato-valor">
 
-            <span class="dato-valor">
-                ${escapeHTML(
-                    String(region)
-                )}
-            </span>
-
-        </div>
-
-    </div>
-
-
-    <div class="pagos">
-
-        <h3>
-            DÍAS DE PAGO
-        </h3>
-
-        ${pagosHTML}
-
-    </div>
-
-`;
-
-}
-
-// ==========================================
-// CARGAR CLIENTE COMPLETO
-// ==========================================
-
-async function cargarCliente(
-    noDV
-) {
-
-    try {
-
-        estado.textContent =
-            "Cargando información...";
-
-
-        const respuesta =
-            await fetch(
-                SUPABASE_FUNCTION_URL,
-                {
-
-                    method:
-                        "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            accion:
-                                "cliente",
-
-                            noDV:
-                                noDV
-
-                        })
-
-                }
-            );
-
-
-        const datos =
-            await respuesta.json();
-
-
-        if (
-            !datos.ok ||
-            !datos.encontrado
-        ) {
-
-            estado.textContent =
-                "No se encontró el cliente.";
-
-            return;
-
-        }
-
-
-        estado.textContent =
-            "✓ Cliente encontrado";
-
-
-        mostrarCliente(
-            datos.cliente
-        );
-
-
-    }
-    catch (error) {
-
-        console.error(
-            error
-        );
-
-
-        estado.textContent =
-            "❌ Error al consultar el cliente.";
-
-        estado.className =
-            "estado error";
-
-    }
-
-}
-
-
-// ==========================================
-// MOSTRAR CLIENTE
-// ==========================================
-
-function mostrarCliente(
-    cliente
-) {
-
-    const dv =
-        cliente.noDV ??
-        "";
-
-
-    const nombre =
-        cliente.nombre ??
-        "";
-
-
-    const plaza =
-        cliente.plaza ??
-        "";
-
-
-    const region =
-        cliente.region ??
-        "";
-
-
-    let pagosHTML =
-        "";
-
-
-    // ======================================
-    // PAGOS DINÁMICOS
-    // ======================================
-
-    cliente.pagos.forEach(
-        pago => {
-
-            const valor =
-                pago.valor;
-
-
-            let cantidad;
-
-
-            if (
-                valor === "" ||
-                valor === null ||
-                valor === undefined
-            ) {
-
-                cantidad = `
-
-                    <span class="sin-dato">
-                        Sin dato
-                    </span>
-
-                `;
-
-            }
-            else {
-
-                const numero =
-                    Number(valor);
-
-
-                if (
-                    Number.isNaN(
-                        numero
-                    )
-                ) {
-
-                    cantidad =
-                        escapeHTML(
-                            String(
-                                valor
-                            )
-                        );
-
-                }
-                else {
-
-                    cantidad =
-                        "$" +
-                        numero.toLocaleString(
-                            "es-MX",
-                            {
-                                maximumFractionDigits:
-                                    2
-                            }
-                        );
-
-                }
-
-            }
-
-
-            pagosHTML += `
-
-                <div class="pago">
-
-                    <span class="pago-fecha">
-
-                        ${escapeHTML(
-                            String(
-                                pago.fecha
-                            )
-                        )}
-
-                    </span>
-
-                    <span class="pago-cantidad">
-
-                        ${cantidad}
-
-                    </span>
-
-                </div>
-
-            `;
-
-        }
-    );
-
-
-    // ======================================
-    // HTML
-    // ======================================
-
-    clienteHTML.innerHTML = `
-
-        <div class="tarjeta">
-
-            <div class="tarjeta-header">
-
-                <h2>
                     ${escapeHTML(
                         String(nombre)
                     )}
-                </h2>
 
-                <div class="dv">
-
-                    No. DV:
-
-                    <strong>
-
-                        ${escapeHTML(
-                            String(dv)
-                        )}
-
-                    </strong>
-
-                </div>
+                </span>
 
             </div>
 
 
-            <div class="datos">
+            <div class="dato">
 
-                <div class="dato">
+                <span class="dato-titulo">
 
-                    <span class="dato-titulo">
-                        Nombre
-                    </span>
+                    Plaza
 
-                    <span class="dato-valor">
-                        ${escapeHTML(
-                            String(nombre)
-                        )}
-                    </span>
-
-                </div>
+                </span>
 
 
-                <div class="dato">
+                <span class="dato-valor">
 
-                    <span class="dato-titulo">
-                        Plaza
-                    </span>
+                    ${escapeHTML(
+                        String(plaza)
+                    )}
 
-                    <span class="dato-valor">
-                        ${escapeHTML(
-                            String(plaza)
-                        )}
-                    </span>
-
-                </div>
-
-
-                <div class="dato">
-
-                    <span class="dato-titulo">
-                        Región
-                    </span>
-
-                    <span class="dato-valor">
-                        ${escapeHTML(
-                            String(region)
-                        )}
-                    </span>
-
-                </div>
+                </span>
 
             </div>
 
 
-            <div class="pagos">
+            <div class="dato">
 
-                <h3>
-                    DÍAS DE PAGO
-                </h3>
+                <span class="dato-titulo">
 
-                ${pagosHTML}
+                    Región
+
+                </span>
+
+
+                <span class="dato-valor">
+
+                    ${escapeHTML(
+                        String(region)
+                    )}
+
+                </span>
 
             </div>
+
+        </div>
+
+
+        <div class="pagos">
+
+            <h3>
+
+                DÍAS DE PAGO
+
+            </h3>
+
+
+            ${pagosHTML}
 
         </div>
 
     `;
-
-
-    clienteHTML.classList.remove(
-        "oculto"
-    );
-
-
-    clienteHTML.scrollIntoView({
-
-        behavior:
-            "smooth"
-
-    });
 
 }
 
@@ -1046,22 +872,27 @@ function escapeHTML(
     return String(
         valor
     )
+
         .replaceAll(
             "&",
             "&amp;"
         )
+
         .replaceAll(
             "<",
             "&lt;"
         )
+
         .replaceAll(
             ">",
             "&gt;"
         )
+
         .replaceAll(
             '"',
             "&quot;"
         )
+
         .replaceAll(
             "'",
             "&#039;"
