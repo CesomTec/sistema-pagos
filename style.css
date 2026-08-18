@@ -1,0 +1,549 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #f5f7f8;
+
+    color: #062b49;
+
+    min-height: 100vh;
+
+}
+
+
+.app {
+
+    width: 100%;
+
+    max-width: 850px;
+
+    margin: auto;
+
+    padding: 40px 20px 60px;
+
+}
+
+
+/* ============================= */
+/* LOGO */
+/* ============================= */
+
+.logo {
+
+    width: 200px;
+
+    height: 200px;
+
+    margin: 20px auto 25px;
+
+    border-radius: 50%;
+
+    background: #063b63;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+}
+
+
+/* ============================= */
+/* TITULO */
+/* ============================= */
+
+h1 {
+
+    text-align: center;
+
+    font-size: 32px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.subtitulo {
+
+    text-align: center;
+
+    color: #64748b;
+
+    margin-bottom: 35px;
+
+}
+
+
+/* ============================= */
+/* BUSCADOR */
+/* ============================= */
+
+.buscador {
+
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.07);
+
+}
+
+
+.buscador label {
+
+    display: block;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    margin-bottom: 10px;
+
+}
+
+
+.buscador input {
+
+    width: 100%;
+
+    height: 65px;
+
+    border: 2px solid #dbe3e8;
+
+    border-radius: 12px;
+
+    padding: 0 20px;
+
+    font-size: 24px;
+
+    color: #062b49;
+
+    outline: none;
+
+    transition: 0.2s;
+
+}
+
+
+.buscador input:focus {
+
+    border-color: #009b3a;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(0, 155, 58, 0.10);
+
+}
+
+
+/* ============================= */
+/* ESTADO */
+/* ============================= */
+
+.estado {
+
+    text-align: center;
+
+    margin: 20px 0;
+
+    font-size: 14px;
+
+    color: #64748b;
+
+}
+
+
+/* ============================= */
+/* RESULTADOS */
+/* ============================= */
+
+.resultados {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+
+.resultado {
+
+    width: 100%;
+
+    border: none;
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 17px 20px;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    text-align: left;
+
+    box-shadow:
+        0 4px 15px
+        rgba(0, 0, 0, 0.05);
+
+    transition: 0.2s;
+
+}
+
+
+.resultado:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 20px
+        rgba(0, 0, 0, 0.09);
+
+}
+
+
+.resultado-dv {
+
+    min-width: 100px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    color: #009b3a;
+
+}
+
+
+.resultado-nombre {
+
+    font-size: 16px;
+
+    color: #062b49;
+
+}
+
+
+/* ============================= */
+/* CLIENTE */
+/* ============================= */
+
+.cliente {
+
+    margin-top: 25px;
+
+}
+
+
+.tarjeta {
+
+    background: white;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.08);
+
+}
+
+
+/* ENCABEZADO */
+
+.tarjeta-header {
+
+    background: #063b63;
+
+    color: white;
+
+    padding: 25px;
+
+}
+
+
+.tarjeta-header h2 {
+
+    font-size: 24px;
+
+    margin-bottom: 7px;
+
+}
+
+
+.dv {
+
+    opacity: 0.8;
+
+}
+
+
+/* DATOS */
+
+.datos {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+
+    padding: 25px;
+
+}
+
+
+.dato {
+
+    background: #f5f7f8;
+
+    border-radius: 12px;
+
+    padding: 15px;
+
+}
+
+
+.dato-titulo {
+
+    display: block;
+
+    font-size: 12px;
+
+    text-transform: uppercase;
+
+    color: #64748b;
+
+    margin-bottom: 6px;
+
+}
+
+
+.dato-valor {
+
+    font-weight: bold;
+
+    color: #062b49;
+
+}
+
+
+/* ============================= */
+/* PAGOS */
+/* ============================= */
+
+.pagos {
+
+    padding: 0 25px 30px;
+
+}
+
+
+.pagos h3 {
+
+    color: #009b3a;
+
+    font-size: 22px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.pago {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 15px;
+
+    border-bottom:
+        1px solid #e5e7eb;
+
+}
+
+
+.pago-fecha {
+
+    font-weight: bold;
+
+    color: #062b49;
+
+}
+
+
+.pago-cantidad {
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    color: #009b3a;
+
+}
+
+
+.sin-dato {
+
+    color: #94a3b8;
+
+    font-weight: normal;
+
+}
+
+
+/* ============================= */
+/* OCULTO */
+/* ============================= */
+
+.oculto {
+
+    display: none;
+
+}
+
+
+/* ============================= */
+/* CELULAR */
+/* ============================= */
+
+@media (
+    max-width: 600px
+) {
+
+    .app {
+
+        padding:
+            25px
+            15px
+            40px;
+
+    }
+
+
+    .logo {
+
+        width: 80px;
+
+        height: 80px;
+
+        margin-top: 10px;
+
+    }
+
+
+    h1 {
+
+        font-size: 25px;
+
+    }
+
+
+    .subtitulo {
+
+        font-size: 14px;
+
+    }
+
+
+    .buscador {
+
+        padding: 18px;
+
+    }
+
+
+    .buscador input {
+
+        height: 58px;
+
+        font-size: 20px;
+
+    }
+
+
+    .resultado {
+
+        padding: 15px;
+
+        gap: 12px;
+
+    }
+
+
+    .resultado-dv {
+
+        min-width: 75px;
+
+        font-size: 16px;
+
+    }
+
+
+    .resultado-nombre {
+
+        font-size: 14px;
+
+    }
+
+
+    .datos {
+
+        grid-template-columns: 1fr;
+
+        padding: 18px;
+
+    }
+
+
+    .pagos {
+
+        padding:
+            0
+            18px
+            25px;
+
+    }
+
+
+    .pago {
+
+        padding: 14px 5px;
+
+    }
+
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <link rel="icon" href="logo.jpg">
+
+    <title>Consulta de pagos</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<main class="app">
+
+    <div >
+     <img src="logo.jpg" alt="Logo" class="logo">
+    </div>
+
+    <h1>
+        Consulta de días de pago
+    </h1>
+
+    <p class="subtitulo">
+        Selecciona tu archivo de información
+    </p>
+
+
+    <!-- SELECCIONAR EXCEL -->
+
+    <div class="cargar-excel">
+
+        <label
+            for="archivoExcel"
+            class="boton-excel"
+        >
+            📂 Cargar Excel
+        </label>
+
+        <input
+            type="file"
+            id="archivoExcel"
+            accept=".xlsx,.xls"
+        >
+
+        <div
+            id="estado"
+            class="estado"
+        >
+            Ningún archivo cargado
+        </div>
+
+    </div>
+
+
+    <!-- BUSCADOR -->
+
+    <div class="buscador">
+
+        <label for="buscarDV">
+            No. DV
+        </label>
+
+        <input
+            type="text"
+            id="buscarDV"
+            placeholder="Primero carga el Excel..."
+            autocomplete="off"
+            inputmode="numeric"
+            disabled
+        >
+
+    </div>
+
+
+    <!-- RESULTADOS -->
+
+    <div
+        id="resultados"
+        class="resultados"
+    ></div>
+
+
+    <!-- CLIENTE -->
+
+    <section
+        id="cliente"
+        class="cliente oculto"
+    ></section>
+
+
+</main>
+
+
+<script src="xlsx.full.min.js"></script>
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
