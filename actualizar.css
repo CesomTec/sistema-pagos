@@ -1,0 +1,267 @@
+/* ==========================================
+   GENERAL
+========================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #f5f7f9;
+
+    color: #0b1f3a;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+}
+
+
+/* ==========================================
+   CONTENEDOR
+========================================== */
+
+.contenedor {
+    width: 100%;
+
+    max-width: 550px;
+
+    text-align: center;
+}
+
+
+/* ==========================================
+   LOGO
+========================================== */
+
+.logo {
+    width: 150px;
+
+    max-width: 60%;
+
+    margin-bottom: 20px;
+}
+
+
+/* ==========================================
+   TITULO
+========================================== */
+
+h1 {
+    margin: 0;
+
+    font-size: 30px;
+
+    color: #0b1f3a;
+}
+
+
+.subtitulo {
+    margin: 10px 0 25px;
+
+    color: #666;
+
+    font-size: 15px;
+}
+
+
+/* ==========================================
+   TARJETA
+========================================== */
+
+.tarjeta {
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.08);
+
+    border: 1px solid #e5e5e5;
+}
+
+
+/* ==========================================
+   INPUT
+========================================== */
+
+#archivoExcel {
+    display: none;
+}
+
+
+/* ==========================================
+   BOTÓN SELECCIONAR
+========================================== */
+
+.boton-seleccionar {
+    display: block;
+
+    width: 100%;
+
+    padding: 15px;
+
+    background: #0b1f3a;
+
+    color: white;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.boton-seleccionar:hover {
+    background: #102c52;
+}
+
+
+/* ==========================================
+   ARCHIVO SELECCIONADO
+========================================== */
+
+.archivo-seleccionado {
+    margin-top: 18px;
+
+    padding: 14px;
+
+    background: #f1f4f7;
+
+    border-radius: 10px;
+
+    color: #333;
+
+    font-size: 14px;
+
+    word-break: break-word;
+}
+
+
+/* ==========================================
+   BOTÓN ACTUALIZAR
+========================================== */
+
+.boton-actualizar {
+    width: 100%;
+
+    margin-top: 15px;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #16834b;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.boton-actualizar:hover:not(:disabled) {
+    background: #116b3d;
+}
+
+
+.boton-actualizar:disabled {
+    background: #b8b8b8;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================
+   ESTADO
+========================================== */
+
+.estado {
+    margin-top: 20px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    min-height: 20px;
+}
+
+
+.estado.exito {
+    color: #16834b;
+}
+
+
+.estado.error {
+    color: #c62828;
+}
+
+
+.estado.cargando {
+    color: #0b1f3a;
+}
+
+
+/* ==========================================
+   OCULTO
+========================================== */
+
+.oculto {
+    display: none;
+}
+
+
+/* ==========================================
+   CELULAR
+========================================== */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 15px;
+    }
+
+    .tarjeta {
+        padding: 22px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    .logo {
+        width: 120px;
+    }
+
+    .boton-seleccionar,
+    .boton-actualizar {
+        padding: 14px;
+    }
+}

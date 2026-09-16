@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actualizar Excel</title>
+
+    <link rel="stylesheet" href="actualizar.css">
+</head>
+
+<body>
+
+    <main class="contenedor">
+
+        <img
+            src="logo.png"
+            alt="Logo"
+            class="logo"
+        >
+
+        <h1>Actualizar información</h1>
+
+        <p class="subtitulo">
+            Selecciona el archivo Excel que deseas actualizar.
+        </p>
+
+        <section class="tarjeta">
+
+            <!-- SELECCIONAR ARCHIVO -->
+
+            <label
+                for="archivoExcel"
+                class="boton-seleccionar"
+            >
+                📁 Seleccionar Excel
+            </label>
+
+            <input
+                type="file"
+                id="archivoExcel"
+                accept=".xlsx,.xls"
+            >
+
+
+            <!-- ARCHIVO SELECCIONADO -->
+
+            <div
+                id="archivoSeleccionado"
+                class="archivo-seleccionado oculto"
+            ></div>
+
+
+            <!-- BOTÓN ACTUALIZAR -->
+
+            <button
+                id="btnActualizar"
+                class="boton-actualizar"
+                disabled
+            >
+                🔄 Actualizar Excel
+            </button>
+
+
+            <!-- MENSAJE -->
+
+            <div
+                id="estado"
+                class="estado"
+            ></div>
+
+        </section>
+
+    </main>
+
+
+    <script src="actualizar.js"></script>
+
+</body>
+
+</html>
